@@ -1,12 +1,9 @@
 import asyncio
 import logging
-import traceback
-
 from aiogram import Dispatcher, Bot
-from aiogram.types import ErrorEvent
 
-from bot.handlers import start_command
-from config import logger, BOT_TOKEN
+from bot.handlers import start_command, errors
+from utils.config import BOT_TOKEN
 
 
 async def main():
@@ -19,11 +16,7 @@ async def main():
 
     dp = Dispatcher()
 
-    dp.include_routers(start_command.router)
-
-    @dp.error()
-    async def error_handler(event: ErrorEvent):
-        logger.error(traceback.format_exc())
+    dp.include_routers(start_command.router, errors.router)
 
     await dp.start_polling(bot)
 
